@@ -59,7 +59,11 @@ public class ROSClockPublisher : MonoBehaviour
         var publishTime = Clock.time;
         var clockMsg = new TimeMsg
         {
+#if !ROS2
+            sec = (uint)publishTime,
+#else
             sec = (int)publishTime,
+#endif
             nanosec = (uint)((publishTime - Math.Floor(publishTime)) * Clock.k_NanoSecondsInSeconds)
         };
         m_LastPublishTimeSeconds = publishTime;

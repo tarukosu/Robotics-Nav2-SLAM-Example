@@ -9,7 +9,11 @@ namespace Unity.Robotics.Core
         public const double k_NanosecondsInSecond = 1e9f;
 
         // TODO: specify base time this stamp is measured against (Sim 0, time since application start, etc.)
+#if !ROS2
+        public readonly uint Seconds;
+#else
         public readonly int Seconds;
+#endif
         public readonly uint NanoSeconds;
 
         // (From Unity Time.time)
@@ -18,12 +22,20 @@ namespace Unity.Robotics.Core
             var sec = Math.Floor(timeInSeconds);
             var nsec = (timeInSeconds - sec) * k_NanosecondsInSecond;
             // TODO: Check for negatives to ensure safe cast
+#if !ROS2
+            Seconds = (uint)sec;
+#else
             Seconds = (int)sec;
+#endif
             NanoSeconds = (uint)nsec;
         }
 
         // (From a ROS2 Time message)
+#if !ROS2
+        TimeStamp(uint sec, uint nsec)
+#else
         TimeStamp(int sec, uint nsec)
+#endif
         {
             Seconds = sec;
             NanoSeconds = nsec;

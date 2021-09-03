@@ -18,7 +18,11 @@ public static class TransformExtensions
     public static TransformStampedMsg ToROSTransformStamped(this Transform tfUnity, double timeStamp)
     {
         return new TransformStampedMsg(
+#if !ROS2
+            new HeaderMsg(0, new TimeStamp(timeStamp), tfUnity.parent.gameObject.name),
+#else
             new HeaderMsg(new TimeStamp(timeStamp), tfUnity.parent.gameObject.name),
+#endif
             tfUnity.gameObject.name,
             tfUnity.ToROSTransform());
     }
